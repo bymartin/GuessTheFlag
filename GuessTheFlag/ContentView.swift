@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+// MARK: Day 24 Challenge # 3
 // Challenge: create a FlagImage() view that renders one flag
 // using teh same set of modifiers
 struct FlagImage: View {
