@@ -32,6 +32,7 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var score = 0
     @State private var flagRotateAngle = [0.0, 0.0, 0.0]
+    @State private var flagOpacity = [1.0, 1.0, 1.0]
 
     
     var body: some View {
@@ -59,6 +60,7 @@ struct ContentView: View {
                             
                     }
                     .rotation3DEffect(.degrees(self.flagRotateAngle[number]), axis: (x:1, y:0, z:0))
+                    .opacity(self.flagOpacity[number])
                 }
                 Spacer()
                 Text("Score: \(score)")
@@ -78,6 +80,15 @@ struct ContentView: View {
             scoreTitle = "Correct"
             score = score + 1
             flagRotateAngle[number] = 360.0
+            
+            // make the other 2 flags fade to 25% opacity
+            for (index, _) in flagOpacity.enumerated() {
+                if index == number {
+                    continue
+                } else {
+                    flagOpacity[index] = 0.25
+                }
+            }
 
         } else {
             scoreTitle = "Wrong. That's the flag of \(countries[number])."
@@ -91,6 +102,7 @@ struct ContentView: View {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         flagRotateAngle = [0.0, 0.0, 0.0]
+        flagOpacity = [1.0, 1.0, 1.0]
     }
 }
 
