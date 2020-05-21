@@ -31,6 +31,8 @@ struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
     @State private var score = 0
+    @State private var flagRotateAngle = [0.0, 0.0, 0.0]
+
     
     var body: some View {
         ZStack {
@@ -49,10 +51,14 @@ struct ContentView: View {
                 
                 ForEach(0 ..< 3) { number in
                     Button(action: {
-                        self.flagTapped(number)
+                        withAnimation {
+                            self.flagTapped(number)
+                        }
                     }) {
                         FlagImage(image: self.countries[number])
+                            
                     }
+                    .rotation3DEffect(.degrees(self.flagRotateAngle[number]), axis: (x:1, y:0, z:0))
                 }
                 Spacer()
                 Text("Score: \(score)")
@@ -71,6 +77,8 @@ struct ContentView: View {
         if number == correctAnswer {
             scoreTitle = "Correct"
             score = score + 1
+            flagRotateAngle[number] = 360.0
+
         } else {
             scoreTitle = "Wrong. That's the flag of \(countries[number])."
             score = 0
@@ -82,6 +90,7 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        flagRotateAngle = [0.0, 0.0, 0.0]
     }
 }
 
