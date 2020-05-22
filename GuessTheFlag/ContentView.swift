@@ -33,6 +33,9 @@ struct ContentView: View {
     @State private var score = 0
     @State private var flagRotateAngle = [0.0, 0.0, 0.0]
     @State private var flagOpacity = [1.0, 1.0, 1.0]
+    
+    @State private var animationAmount: [CGFloat] = [1, 1, 1]
+    
 
     
     var body: some View {
@@ -43,9 +46,7 @@ struct ContentView: View {
             VStack(spacing: 30) {
                 VStack {
                     Text("Tap the flag of")
-                        .foregroundColor(.white)
                     Text(countries[correctAnswer])
-                        .foregroundColor(.white)
                         .font(.largeTitle)
                         .fontWeight(.black)
                 }
@@ -61,14 +62,15 @@ struct ContentView: View {
                     }
                     .rotation3DEffect(.degrees(self.flagRotateAngle[number]), axis: (x:1, y:0, z:0))
                     .opacity(self.flagOpacity[number])
+                    .scaleEffect(self.animationAmount[number])
                 }
                 Spacer()
                 Text("Score: \(score)")
-                    .foregroundColor(.white)
                     .font(.largeTitle)
                 Spacer()
             }
         }
+        .foregroundColor(.white)
         .alert(isPresented: $showingScore) {
             Alert(title: Text(scoreTitle), message: Text("Your score is \(score)"), dismissButton: .default(Text("Continue")) {
                 self.askQuestion()
@@ -84,7 +86,7 @@ struct ContentView: View {
             // make the other 2 flags fade to 25% opacity
             for (index, _) in flagOpacity.enumerated() {
                 if index == number {
-                    continue
+                    flagOpacity[index] = 1.0
                 } else {
                     flagOpacity[index] = 0.25
                 }
@@ -93,6 +95,7 @@ struct ContentView: View {
         } else {
             scoreTitle = "Wrong. That's the flag of \(countries[number])."
             score = 0
+            animationAmount[number] = 1.6
         }
         
         showingScore = true
@@ -103,6 +106,7 @@ struct ContentView: View {
         correctAnswer = Int.random(in: 0...2)
         flagRotateAngle = [0.0, 0.0, 0.0]
         flagOpacity = [1.0, 1.0, 1.0]
+        animationAmount = [1, 1, 1]
     }
 }
 
